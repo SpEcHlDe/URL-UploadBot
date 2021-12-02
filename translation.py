@@ -34,13 +34,13 @@ Send Me Any Direct Download URL Link, I Can Upload To Telegram As File/Video! �
 
     ABOUT_TEXT = """🔸<b>My Name🔸       : URL UPLOADBOT</b>
 
-🔸<b>Creator🔸           : <a href='https://GitHub.com/oVo-HxBots'>@oVo-HxBots</a></b>
+🔸<b>Creator🔸           : <a href='https://GitHub.com/SpEcHlDe'>@SpEcHlDe</a></b>
 
 🔸<b>Language🔸      : Python3</b>
 
 🔸<b>Library🔸            : Pyrogram</b>
 
-🔸<b>Source Code🔸 : <a href='https://t.me/HxBots'>URL UPLOADBOT</a></b>"""
+🔸<b>Source Code🔸 : <a href='https://github.com/url-uploadbot'>URL UPLOADBOT</a></b>"""
 
 
 
@@ -55,11 +55,11 @@ Send Me Any Direct Download URL Link, I Can Upload To Telegram As File/Video! �
 URL | newfilename | username | password"""
 
 
-    UPGRADE_TEXT = """<b>👉 If You Liked Our Bot And Service Please Support Us By Forking Our Repo  <a href='https://GitHub.com/oVo-HxBots/URL-UploadBot'>UrlUpload Bot</a></b>"""
+    UPGRADE_TEXT = """<b>👉 If You Liked Our Bot And Service Please Support Us By Forking Our Repo  <a href='https://GitHub.com/SpEcHlDe/URL-UploadBot'>UrlUpload Bot</a></b>"""
     
     DOWNLOAD_START = """Trying to download your file..."""
     
-    UPLOAD_START = "Uploading now...Have a cup of tea till I upload"
+    UPLOAD_START = "Trying to Upload... Check our Repo on Github Till I Upload."
 
     RCHD_TG_API_LIMIT = "Downloaded in {} seconds.\nDetected File Size: {}\nSorry. But, I cannot upload files greater than 1.95GB due to Telegram API limitations."
 
