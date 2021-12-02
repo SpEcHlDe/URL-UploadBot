@@ -33,7 +33,7 @@ async def echo(bot, update):
             revoke=True
         )
         return
-    intmsg = await update.reply_text("Analyzing given link...", quote=True)   
+    intmsg = await update.reply_text("Analyzing given link...", quote=True)
     url = update.text
     youtube_dl_username = None
     youtube_dl_password = None
@@ -124,6 +124,8 @@ async def echo(bot, update):
             disable_web_page_preview=True
         )
         return False
+    # logger.info(response_json)
+    inline_keyboard = []
     if t_response:
         x_reponse = t_response
         if "\n" in x_reponse:
@@ -133,11 +135,7 @@ async def echo(bot, update):
             "/" + str(update.from_user.id) + ".json"
         with open(save_ytdl_json_path, "w", encoding="utf8") as outfile:
             json.dump(response_json, outfile, ensure_ascii=False)
-        # logger.info(response_json)
-        inline_keyboard = []
-        duration = None
-        if "duration" in response_json:
-            duration = response_json["duration"]
+        duration = response_json["duration"] if "duration" in response_json else None
         if "formats" in response_json:
             for formats in response_json["formats"]:
                 format_id = formats.get("format_id")
@@ -152,7 +150,10 @@ async def echo(bot, update):
                     "video", format_id, format_ext)
                 cb_string_file = "{}|{}|{}".format(
                     "file", format_id, format_ext)
-                if format_string is not None and not "audio only" in format_string:
+                if (
+                    format_string is not None
+                    and "audio only" not in format_string
+                ):
                     ikeyboard = [
                         InlineKeyboardButton(
                             "S " + format_string + " video " + approx_file_size + " ",
@@ -242,15 +243,13 @@ async def echo(bot, update):
 
         if not os.path.exists(thumb_image_path):
             mes = await thumb(update.from_user.id)
-            if mes != None:
-                m = await bot.get_messages(update.chat.id, mes.msg_id)
-                await m.download(file_name=thumb_image_path)
-                thumb_image_path = thumb_image_path
-            else:
-                if "thumbnail" in response_json:
-                    if response_json["thumbnail"] is not None:
-                        thumbnail = response_json["thumbnail"]
-                        thumbnail_image = response_json["thumbnail"]
+            if mes is None:
+                if (
+                    "thumbnail" in response_json
+                    and response_json["thumbnail"] is not None
+                ):
+                    thumbnail = response_json["thumbnail"]
+                    thumbnail_image = response_json["thumbnail"]
                 thumb_image_path = DownLoadFile(
                     thumbnail_image,
                     Config.DOWNLOAD_LOCATION + "/" +
@@ -261,6 +260,10 @@ async def echo(bot, update):
                     update.message_id,
                     update.chat.id
                 )
+            else:
+                m = await bot.get_messages(update.chat.id, mes.msg_id)
+                await m.download(file_name=thumb_image_path)
+                thumb_image_path = thumb_image_path
         await intmsg.delete()
         await bot.send_message(
             chat_id=update.chat.id,
@@ -270,7 +273,6 @@ async def echo(bot, update):
             reply_to_message_id=update.message_id
         )
     else:
-        inline_keyboard = []
         cb_string_file = "{}={}={}".format(
             "file", "LFO", "NONE")
         cb_string_video = "{}={}={}".format(

@@ -207,9 +207,8 @@ async def youtube_dl_call_back(bot, update):
             duration = 0
             if tg_send_type != "file":
                 metadata = extractMetadata(createParser(download_directory))
-                if metadata is not None:
-                    if metadata.has("duration"):
-                        duration = metadata.get('duration').seconds
+                if metadata is not None and metadata.has("duration"):
+                    duration = metadata.get('duration').seconds
 
             thumb_image_path = Config.DOWNLOAD_LOCATION + \
                 "/" + str(update.from_user.id) + ".jpg"
@@ -222,11 +221,9 @@ async def youtube_dl_call_back(bot, update):
                     thumb_image_path = thumb_image_path
 
             if os.path.exists(thumb_image_path):
-                width = 0
                 height = 0
                 metadata = extractMetadata(createParser(thumb_image_path))
-                if metadata.has("width"):
-                    width = metadata.get("width")
+                width = metadata.get("width") if metadata.has("width") else 0
                 if metadata.has("height"):
                     height = metadata.get("height")
                 if tg_send_type == "vm":
@@ -319,35 +316,34 @@ async def youtube_dl_call_back(bot, update):
             time_taken_for_upload = (end_two - end_one).seconds
 
             media_album_p = []
-            if Config.SCREENSHOTS=="True":
-                if images is not None:
-                    i = 0
+            if Config.SCREENSHOTS == "True" and images is not None:
+                i = 0
+                caption = "<b>@HxBots | <a href='https://GitHub.com/oVo-HxBots'>@oVo-HxBots</a> | <a href='https://GitHub.com/oVoIndia'>@oVoIndia</a></b>"
+                if is_w_f:
                     caption = "<b>@HxBots | <a href='https://GitHub.com/oVo-HxBots'>@oVo-HxBots</a> | <a href='https://GitHub.com/oVoIndia'>@oVoIndia</a></b>"
-                    if is_w_f:
-                        caption = "<b>@HxBots | <a href='https://GitHub.com/oVo-HxBots'>@oVo-HxBots</a> | <a href='https://GitHub.com/oVoIndia'>@oVoIndia</a></b>"
-                    for image in images:
-                        if os.path.exists(image):
-                            if i == 0:
-                                media_album_p.append(
-                                    InputMediaPhoto(
-                                        media=image,
-                                        caption=caption,
-                                        parse_mode="html"
-                                    )
+                for image in images:
+                    if os.path.exists(image):
+                        if i == 0:
+                            media_album_p.append(
+                                InputMediaPhoto(
+                                    media=image,
+                                    caption=caption,
+                                    parse_mode="html"
                                 )
-                            else:
-                                media_album_p.append(
-                                    InputMediaPhoto(
-                                        media=image
-                                    )
+                            )
+                        else:
+                            media_album_p.append(
+                                InputMediaPhoto(
+                                    media=image
                                 )
-                            i = i + 1
-                    await bot.send_media_group(
-                        chat_id=update.message.chat.id,
-                        disable_notification=True,
-                        reply_to_message_id=update.message.message_id,
-                        media=media_album_p
-                    )
+                            )
+                        i += 1
+                await bot.send_media_group(
+                    chat_id=update.message.chat.id,
+                    disable_notification=True,
+                    reply_to_message_id=update.message.message_id,
+                    media=media_album_p
+                )
             try:
                 shutil.rmtree(tmp_directory_for_each_user)   
             except:
